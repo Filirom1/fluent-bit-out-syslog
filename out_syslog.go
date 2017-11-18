@@ -46,11 +46,6 @@ var (
 	}
 )
 
-//export FLBPluginRegister
-func FLBPluginRegister(ctx unsafe.Pointer) int {
-	return output.FLBPluginRegister(ctx, "syslog", "Syslog")
-}
-
 var Config struct {
 	network string
 	address string
@@ -58,11 +53,12 @@ var Config struct {
 	tag string
 }
 
-//export FLBPluginInit
-// (fluentbit will call this)
-// ctx (context) pointer to fluentbit context (state/ c code)
+func FLBPluginRegister(ctx unsafe.Pointer) int {
+	return output.FLBPluginRegister(ctx, "syslog", "Syslog")
+}
+
+// Parse configuration
 func FLBPluginInit(ctx unsafe.Pointer) int {
-	// Example to retrieve an optional configuration parameter
 	Config.network = output.FLBPluginConfigKey(ctx, "network")
 
 	Config.address = output.FLBPluginConfigKey(ctx, "address")
@@ -89,20 +85,21 @@ func FLBPluginInit(ctx unsafe.Pointer) int {
 	return output.FLB_OK
 }
 
-//export FLBPluginFlush
 func FLBPluginFlush(data unsafe.Pointer, length C.int, tag *C.char) int {
 	var ret int
 	var record map[interface{}]interface{}
 	var syslogTag string
 
-	// Create Fluent Bit decoder
 	dec := output.NewDecoder(data, int(length))
+
+	// use tag from the configuration, otherwize use fluentbit tag
 	if Config.tag == "" {
 		syslogTag = C.GoString(tag)
 	}else{
 		syslogTag = Config.tag
 	}
 
+	// Connect to syslog
 	sysLog, err := syslog.Dial(Config.network, Config.address, Config.priority, syslogTag)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "[out_syslog] failed to send logs: ", err);
@@ -117,31 +114,26 @@ func FLBPluginFlush(data unsafe.Pointer, length C.int, tag *C.char) int {
 			break
 		}
 
+		// Send record keys and values
 		str := ""
 		for k, v := range record {
 			str += fmt.Sprintf("%s=%v ", k, v)
 		}
-
-		// Print record keys and values
 		fmt.Fprint(sysLog, str)
 
 	}
 
+	// Close syslog connection
 	sysLog.Close()
 
-	// Return options:
-	//
-	// output.FLB_OK    = data have been processed.
-	// output.FLB_ERROR = unrecoverable error, do not try this again.
-	// output.FLB_RETRY = retry to flush later.
 	return output.FLB_OK
 }
 
-//export FLBPluginExit
 func FLBPluginExit() int {
 	return output.FLB_OK
 }
 
+// create a syslog priority from severity and facility
 func getSyslogPriority(severity string, facility string) (syslog.Priority, error) {
 	severityPriority, ok := severitiesMap[strings.ToUpper(severity)]
 	if !ok {
