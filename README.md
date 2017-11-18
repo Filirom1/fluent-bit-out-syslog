@@ -8,7 +8,7 @@ Work In Progress: do not use yet
 
 **Address:** Remote syslog address. Format: IP:PORT or HOSTNAME:PORT. Only use if network is not empty
 
-**Severity:** Syslog severity as defined by RFC 3164:
+**Severity:** Default info. Syslog severity as defined by RFC 3164:
 * emerg 
 * alert 
 * crit 
@@ -18,7 +18,7 @@ Work In Progress: do not use yet
 * info
 * debug
 
-**Facility:** Syslog facility as defined by RFC 3164:
+**Facility:** Default local0. Syslog facility as defined by RFC 3164:
 * kern
 * user
 * mail
