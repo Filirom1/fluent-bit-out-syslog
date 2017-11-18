@@ -46,13 +46,13 @@ Work In Progress: do not use yet
 
 ```
 [OUTPUT]
-    Name  syslog
-    Match *
-    Network udp
-    Address localhost:514
-    Severity info
-    Facility ftp
-    Tag my-tag
+    Name       syslog
+    Match      *
+    Network    udp
+    Address    localhost:514
+    Severity   info
+    Facility   ftp
+    Tag        my-tag
 ```
 
 ## Build
