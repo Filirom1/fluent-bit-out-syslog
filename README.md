@@ -67,3 +67,8 @@ go build -buildmode=c-shared -o out_syslog.so .
 ```
 $ td-agent-bit -v -e ./out_syslog.so -i cpu -o syslog
 ```
+
+## Version
+
+Tested with [fluent-bit-go v0.12](https://github.com/fluent/fluent-bit-go/tree/api-0.12)
+
