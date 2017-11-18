@@ -1,12 +1,14 @@
-# output syslog for fluent-bit
+# Output Syslog Plugin for Fluent-Bit
 
 Work In Progress: do not use yet
 
 ## Options
 
-*Network:* If network is empty (default), it will connect to the local syslog server. Otherwise tcp and udp is supported.
-*Address:* Remote syslog address. Format: IP:PORT or HOSTNAME:PORT. Only use if network is not empty
-*Severity:* Syslog severity as defined by RFC 3164:
+**Network:** If network is empty (default), it will connect to the local syslog server. Otherwise tcp and udp is supported.
+
+**Address:** Remote syslog address. Format: IP:PORT or HOSTNAME:PORT. Only use if network is not empty
+
+**Severity:** Syslog severity as defined by RFC 3164:
 * emerg 
 * alert 
 * crit 
@@ -16,7 +18,7 @@ Work In Progress: do not use yet
 * info
 * debug
 
-*Facility:* Syslog facility as defined by RFC 3164:
+**Facility:** Syslog facility as defined by RFC 3164:
 * kern
 * user
 * mail
@@ -38,7 +40,7 @@ Work In Progress: do not use yet
 * local6
 * local7
 
-*Tag:* By default use tag provided by FluentBit.
+**Tag:** By default use tag provided by FluentBit.
 
 ## Configuration example
 
